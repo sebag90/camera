@@ -1,10 +1,11 @@
+import argparse
 from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
 
 
-def main():
+def main(args):
     legs = {
         17: [2013, 2014, 2015, 2016, 2017, 2018],
         18: [2018, 2019, 2020, 2021, 2022],
@@ -12,7 +13,7 @@ def main():
 
     for leg, years in legs.items():
         # create directories
-        output_dir = Path(f"leg{leg}")
+        output_dir = Path(args.output)
         output_dir.mkdir(parents=True, exist_ok=True)
 
         # iterate over years and months
@@ -42,4 +43,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("output")
+    args = parser.parse_args()
+    main(args)
