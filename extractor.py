@@ -22,7 +22,7 @@ def main(args):
         soup = BeautifulSoup(data, features="lxml")
         steno = soup.find("div", {"id": "stenografico"})
 
-        " initialise temporary variables"
+        # initialise temporary variables
         current_speaker = None
         temp = ""
         president = ""
