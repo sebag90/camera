@@ -17,10 +17,12 @@ def get_html(path):
 
 def main(args):
     for i, file in enumerate(Path(args.input).iterdir()):
+        # parse epub file
         data = get_html(file)
         soup = BeautifulSoup(data, features="lxml")
         steno = soup.find("div", {"id": "stenografico"})
 
+        " initialise temporary variables"
         current_speaker = None
         temp = ""
         president = ""
@@ -30,6 +32,7 @@ def main(args):
             r"^[^a-zA-Z0-9\(\)]+"
         )
 
+        # create output directory and file
         output_dir = Path(args.output)
         output_dir.mkdir(parents=True, exist_ok=True)
         outputfile = Path(f"{output_dir}/{file.stem}.txt")
@@ -39,7 +42,6 @@ def main(args):
             print("\t".join(["speaker", "role", "text", "extra"]), file=ofile)
 
             for element in steno.find_all("p"):
-                # print(element.attrs, element, file)
                 try:
                     element_type = element.attrs["class"].pop()
                 except:
@@ -47,7 +49,7 @@ def main(args):
                     element_type = "interventoVirtuale"
 
                 if element_type == "presidenza":
-                    # print(f"# {element.text.strip()}", file=ofile)
+                    # extract name of president
                     president_line = re.sub(r"\([^)]+\)", "", element.text)
                     split_text = president_line.strip().split()
                     index = (
@@ -79,11 +81,13 @@ def main(args):
 
                         temp = ""
 
+                    # extract speaker name
                     try:
                         speaker = element.a.text.strip()
                     except:
                         speaker = element.text.strip().split(".")[0]
 
+                    # string cleaning
                     complete_line = element.text
                     complete_line = complete_line.replace(speaker, "").strip()
                     complete_line = re.sub(cleaning_regex, "", complete_line)
