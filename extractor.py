@@ -35,7 +35,7 @@ def main(args):
         # create output directory and file
         output_dir = Path(args.output)
         output_dir.mkdir(parents=True, exist_ok=True)
-        outputfile = Path(f"{output_dir}/{file.stem}.txt")
+        outputfile = Path(f"{output_dir}/{file.stem}.tsv")
 
         with outputfile.open("w", encoding="utf-8") as ofile:
             # print header
